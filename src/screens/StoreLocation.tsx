@@ -5,6 +5,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import MapboxGL, {Logger} from '@rnmapbox/maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -13,6 +14,7 @@ import {APIKEY} from '../utils/key';
 import ColorfulCard from '@freakycoder/react-native-colorful-card';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Text} from 'react-native';
 
 Logger.setLogCallback(log => {
   const {message} = log;
@@ -34,6 +36,11 @@ Geolocation.setRNConfiguration({
   authorizationLevel: 'auto',
 });
 
+const routeProfiles = [
+  {id: 'walking', label: 'Walking', icon: 'walking'},
+  {id: 'cycling', label: 'Cylcing', icon: 'bicycle'},
+  {id: 'driving', label: 'Driving', icon: 'car'},
+];
 const StoreLocation: React.FC = () => {
   const [routeDirections, setRouteDirections] = useState<any | null>(null);
   const [coords, setCoords] = useState<[number, number]>([12.48839, 50.72724]);
@@ -43,6 +50,8 @@ const StoreLocation: React.FC = () => {
     12.48839, 50.72724,
   ]);
   const [loading, setLoading] = useState(true);
+  const [selectedRouteProfile, setselectedRouteProfile] =
+    useState<string>('walking');
   const route = useRoute<any>();
   const navigation = useNavigation<any>();
 
@@ -62,8 +71,11 @@ const StoreLocation: React.FC = () => {
 
   useEffect(() => {
     getPermissionLocation();
-    console.log(store.longitude);
-  }, []);
+    //console.log(store.longitude);
+    if (selectedRouteProfile !== null) {
+      createRouterLine(coords, selectedRouteProfile);
+    }
+  }, [selectedRouteProfile]);
 
   function makeRouterFeature(coordinates: [number, number][]): any {
     let routerFeature = {
@@ -82,11 +94,14 @@ const StoreLocation: React.FC = () => {
     return routerFeature;
   }
 
-  async function createRouterLine(coords: [number, number]): Promise<void> {
+  async function createRouterLine(
+    coords: [number, number],
+    routeProfile: string,
+  ): Promise<void> {
     const startCoords = `${coords[0]},${coords[1]}`;
     const endCoords = `${[store.longitude, store.latitude]}`;
     const geometries = 'geojson';
-    const url = `https://api.mapbox.com/directions/v5/mapbox/walking/${startCoords};${endCoords}?alternatives=true&geometries=${geometries}&steps=true&banner_instructions=true&overview=full&voice_instructions=true&access_token=${APIKEY}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/${routeProfile}/${startCoords};${endCoords}?alternatives=true&geometries=${geometries}&steps=true&banner_instructions=true&overview=full&voice_instructions=true&access_token=${APIKEY}`;
 
     try {
       let response = await fetch(url);
@@ -113,6 +128,35 @@ const StoreLocation: React.FC = () => {
     }
   }
 
+  const renderItem = ({
+    item,
+  }: {
+    item: {id: string; label: string; icon: string};
+  }) => (
+    <TouchableOpacity
+      style={[
+        styles.routeProfileButton,
+        item.id == selectedRouteProfile && styles.selectedRouteProfileButton,
+      ]}
+      onPress={() => setselectedRouteProfile(item.id)}>
+      <Icon
+        name={item.icon}
+        size={24}
+        color={
+          item.id == selectedRouteProfile ? 'white' : 'rgba(255,255,255,0.6)'
+        }
+      />
+      <Text
+        style={[
+          styles.routeProfileButtonText,
+          item.id == selectedRouteProfile &&
+            styles.selectedRouteProfileButtonText,
+        ]}>
+        {item.label}
+      </Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <MapboxGL.MapView
@@ -121,7 +165,7 @@ const StoreLocation: React.FC = () => {
         styleURL="mapbox://styles/mapbox/navigation-night-v1"
         rotateEnabled={true}
         onDidFinishLoadingMap={async () => {
-          await createRouterLine(coords);
+          await createRouterLine(coords, selectedRouteProfile);
         }}>
         <MapboxGL.Camera
           zoomLevel={5}
@@ -155,6 +199,16 @@ const StoreLocation: React.FC = () => {
           showsUserHeadingIndicator={true}
         />
       </MapboxGL.MapView>
+      <FlatList
+        data={routeProfiles}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        horizontal
+        contentContainerStyle={styles.routeProfileList}
+        showsHorizontalScrollIndicator={false}
+        style={styles.flatList}
+      />
+
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}>
@@ -218,6 +272,42 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  routeProfileList: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: 'transparent',
+    zIndex: 1,
+  },
+  flatList: {
+    position: 'absolute',
+    bottom: 20,
+    left: Dimensions.get('window').width / 2 - 40,
+    right: 0,
+    backgroundColor: 'transparent',
+    zIndex: 1,
+  },
+  routeProfileButton: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginHorizontal: 8,
+    borderColor: '#fff',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+  selectedRouteProfileButton: {
+    backgroundColor: '#FA9E14',
+    borderColor: '#FA9E14',
+  },
+  routeProfileButtonText: {
+    color: '#fff',
+    marginTop: 5,
+  },
+  selectedRouteProfileButtonText: {
+    color: 'white',
   },
 });
 
