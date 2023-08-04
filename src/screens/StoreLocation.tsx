@@ -12,6 +12,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {APIKEY} from '../utils/key';
 import ColorfulCard from '@freakycoder/react-native-colorful-card';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 Logger.setLogCallback(log => {
   const {message} = log;
@@ -38,6 +39,9 @@ const StoreLocation: React.FC = () => {
   const [coords, setCoords] = useState<[number, number]>([12.48839, 50.72724]);
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
+  const [destinationCoords, setDestinationCoords] = useState<[number, number]>([
+    12.48839, 50.72724,
+  ]);
   const [loading, setLoading] = useState(true);
   const route = useRoute<any>();
   const navigation = useNavigation<any>();
@@ -95,7 +99,9 @@ const StoreLocation: React.FC = () => {
       });
 
       let coordinates = json['routes'][0]['geometry']['coordinates'];
-
+      let destinationCoordinates =
+        json['routes'][0]['geometry']['coordinates'].slice(-1)[0];
+      setDestinationCoords(destinationCoordinates);
       if (coordinates.length) {
         const routerFeature = makeRouterFeature([...coordinates]);
         setRouteDirections(routerFeature);
@@ -134,6 +140,15 @@ const StoreLocation: React.FC = () => {
             />
           </MapboxGL.ShapeSource>
         )}
+        {destinationCoords && (
+          <MapboxGL.PointAnnotation
+            id="destinationPoint"
+            coordinate={destinationCoords}>
+            <View style={styles.destinationIcon}>
+              <Ionicons name="storefront" size={24} color="#E1710A" />
+            </View>
+          </MapboxGL.PointAnnotation>
+        )}
         <MapboxGL.UserLocation
           animated={true}
           androidRenderMode={'gps'}
@@ -155,7 +170,7 @@ const StoreLocation: React.FC = () => {
         routeDirections && (
           <View style={styles.cardContainer}>
             <ColorfulCard
-              title="Duration"
+              title={`${store.name}`}
               value={`${duration} h`}
               footerTitle="Distance"
               footerValue={`${distance} km`}
@@ -197,6 +212,12 @@ const styles = StyleSheet.create({
     top: 20,
     right: 20,
     zIndex: 1,
+  },
+  destinationIcon: {
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
