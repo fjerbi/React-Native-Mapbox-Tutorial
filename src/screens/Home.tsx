@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
 import {storesData} from '../data/stores';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import Geolocation from '@react-native-community/geolocation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 interface StoreData {
   id: string;
@@ -41,14 +43,92 @@ const StoreCard: React.FC<{item: StoreData}> = ({item}) => (
 
 const Home: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const [userLocation, setuserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+
+  const [nearbyStores, setnearbyStores] = useState<StoreData[]>([]);
+  const [showAllStores, setshowAllStores] = useState(false);
   const handleStorePress = (item: StoreData) => {
     navigation.navigate('StoreLocation', {store: item});
   };
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setuserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      error => console.log('Error getting location:', error),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    );
+  }, []);
 
+  const handleNearbyPress = () => {
+    if (userLocation) {
+      // Calculate the distance between the user and each store
+
+      const nearbyStores = storesData.filter(store => {
+        const distance = calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          store.latitude,
+          store.longitude,
+        );
+        return distance <= 20; // Filter stores within 20 km
+      });
+      setnearbyStores(nearbyStores);
+      setshowAllStores(false);
+    }
+  };
+
+  const handleAllPress = () => {
+    setnearbyStores([]); // clear the nearbystores state
+    setshowAllStores(true); // show all stores
+  };
+
+  const calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number,
+  ) => {
+    //calculate distance between two coordinates using the haversine formula
+    const R = 6371; // Radius of the Earth in km;
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+  };
+
+  const deg2rad = (deg: number) => {
+    return deg * (Math.PI / 180);
+  };
   return (
     <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={handleNearbyPress} style={styles.button}>
+          <Icon name="location-sharp" size={20} color="white" />
+          <Text style={styles.buttonTextNearby}>Nearby</Text>
+        </TouchableOpacity>
+        <View style={styles.divider} />
+        <TouchableOpacity onPress={handleAllPress} style={styles.button}>
+          <Icon name="globe-outline" size={20} color="white" />
+          <Text style={styles.buttonTextAll}>All</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
-        data={storesData}
+        data={showAllStores ? storesData : nearbyStores}
         renderItem={({item}: {item: StoreData}) => (
           <TouchableOpacity onPress={() => handleStorePress(item)}>
             <StoreCard item={item} />
@@ -66,6 +146,40 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: '#f0f0f0',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingHorizontal: 20,
+  },
+  button: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#4B6777',
+    paddingVertical: 12,
+    borderRadius: 25,
+    marginHorizontal: 5,
+  },
+  buttonTextNearby: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 5,
+  },
+  divider: {
+    height: 2,
+    backgroundColor: '#bbb',
+    flex: 0.2,
+  },
+  buttonTextAll: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 5,
   },
   flatListContainer: {
     paddingBottom: 10,

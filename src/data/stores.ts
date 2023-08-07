@@ -29,7 +29,7 @@ export const storesData: readonly StoreData[] = [
   },
   {
     id: '3',
-    name: 'Store C',
+    name: 'Store in Zwickau',
     imageUrl:
       'https://e0.pxfuel.com/wallpapers/847/1017/desktop-wallpaper-in-some-districts-urban-anime-life-live-wall.jpg',
     latitude: 50.7150571,
@@ -39,7 +39,7 @@ export const storesData: readonly StoreData[] = [
   },
   {
     id: '4',
-    name: 'Store D',
+    name: 'Store in Zwickau',
     imageUrl:
       'https://images.wallpapersden.com/image/download/night-in-neon-city_bWhmZWyUmZqaraWkpJRmZWdprWpsaw.jpg',
     latitude: 50.7150571,
