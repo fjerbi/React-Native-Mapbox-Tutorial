@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Slider from '@react-native-community/slider';
 
 interface StoreData {
   id: string;
@@ -50,6 +51,7 @@ const Home: React.FC = () => {
 
   const [nearbyStores, setnearbyStores] = useState<StoreData[]>([]);
   const [showAllStores, setshowAllStores] = useState(false);
+  const [selectedDistance, setselectedDistance] = useState<number>(20);
   const handleStorePress = (item: StoreData) => {
     navigation.navigate('StoreLocation', {store: item});
   };
@@ -77,7 +79,7 @@ const Home: React.FC = () => {
           store.latitude,
           store.longitude,
         );
-        return distance <= 20; // Filter stores within 20 km
+        return distance <= selectedDistance; // Filter stores within 20 km
       });
       setnearbyStores(nearbyStores);
       setshowAllStores(false);
@@ -126,6 +128,18 @@ const Home: React.FC = () => {
           <Icon name="globe-outline" size={20} color="white" />
           <Text style={styles.buttonTextAll}>All</Text>
         </TouchableOpacity>
+      </View>
+      <View style={styles.sliderContainer}>
+        <Text style={styles.distanceText}>Distance : {selectedDistance}</Text>
+        <Slider
+          style={styles.slider}
+          minimumValue={20}
+          maximumValue={60}
+          minimumTrackTintColor="#FFFFFF"
+          maximumTrackTintColor="#000000"
+          value={selectedDistance}
+          onValueChange={value => setselectedDistance(value)}
+        />
       </View>
       <FlatList
         data={showAllStores ? storesData : nearbyStores}
@@ -180,6 +194,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 5,
+  },
+  sliderContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  distanceText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  slider: {
+    width: '100%',
+    marginBottom: 5,
   },
   flatListContainer: {
     paddingBottom: 10,

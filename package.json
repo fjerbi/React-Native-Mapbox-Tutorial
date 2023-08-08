@@ -13,6 +13,7 @@
     "@freakycoder/react-native-bounceable": ">= 0.2.4",
     "@freakycoder/react-native-colorful-card": "^0.1.3",
     "@react-native-community/geolocation": "^3.0.6",
+    "@react-native-community/slider": "^4.4.2",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/stack": "^6.3.17",
     "@rnmapbox/maps": "^10.0.11",

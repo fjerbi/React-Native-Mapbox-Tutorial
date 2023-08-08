@@ -26,7 +26,7 @@ const HeaderComponent = () => {
         <Icon name="store" size={30} color="white" />
       </View>
       <View style={styles.middleContent}>
-        <Text style={styles.title}>Stores</Text>
+        <Text style={styles.title}>My Nearby Stores</Text>
       </View>
       <View style={styles.rightContent}>
         <Switch
@@ -44,7 +44,7 @@ const HeaderComponent = () => {
               styles.iconContainer,
               {shadowOpacity, backgroundColor: '#ffdb58'},
             ]}>
-            <Icon name="nightlight-round" size={30} color="white" />
+            <Icon name="nightlight-round" size={20} color="white" />
           </Animated.View>
         ) : (
           <Animated.View
@@ -52,7 +52,7 @@ const HeaderComponent = () => {
               styles.iconContainer,
               {shadowOpacity, backgroundColor: '#f4f3f4'},
             ]}>
-            <Icon name="wb-sunny" size={30} color="#ffdb58" />
+            <Icon name="wb-sunny" size={20} color="#ffdb58" />
           </Animated.View>
         )}
       </View>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   title: {
-    fontSize: 24,
+    fontSize: 15,
     fontWeight: '400',
     color: 'white',
   },

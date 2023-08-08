@@ -14,37 +14,39 @@ export const storesData: readonly StoreData[] = [
     imageUrl: 'https://images4.alphacoders.com/869/869425.jpg',
     latitude: 50.833332,
     longitude: 12.916667,
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    description: '...',
   },
   {
     id: '2',
     name: 'Store in Heidelberg',
-    imageUrl:
-      'https://e0.pxfuel.com/wallpapers/674/159/desktop-wallpaper-night-aesthetic-dekstop-at-street-aesthetic.jpg',
+    imageUrl: 'https://e0.pxfuel.com/wallpapers/674/159/desktop-wallpaper-night-aesthetic-dekstop-at-street-aesthetic.jpg',
     latitude: 49.40768,
     longitude: 8.69079,
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    description: '...',
   },
   {
     id: '3',
     name: 'Store in Zwickau',
-    imageUrl:
-      'https://e0.pxfuel.com/wallpapers/847/1017/desktop-wallpaper-in-some-districts-urban-anime-life-live-wall.jpg',
+    imageUrl: 'https://e0.pxfuel.com/wallpapers/847/1017/desktop-wallpaper-in-some-districts-urban-anime-life-live-wall.jpg',
     latitude: 50.7150571,
     longitude: 12.4941442,
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    description: '...',
   },
   {
     id: '4',
-    name: 'Store in Zwickau',
-    imageUrl:
-      'https://images.wallpapersden.com/image/download/night-in-neon-city_bWhmZWyUmZqaraWkpJRmZWdprWpsaw.jpg',
-    latitude: 50.7150571,
-    longitude: 12.4941442,
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    name: 'Store in Leipzig',
+    imageUrl: 'https://images.wallpapersden.com/image/download/night-in-neon-city_bWhmZWyUmZqaraWkpJRmZWdprWpsaw.jpg',
+    latitude: 51.3396955,
+    longitude: 12.3730747,
+    description: '...',
   },
+  {
+    id: '5',
+    name: 'Store in Munich',
+    imageUrl: 'https://img.freepik.com/premium-photo/night-city-neon-lights-metropolis-reflection-neon-lights-water-modern-city-with-highrise-buildings-night-street-scene-city-ocean-3d-illustration_129911-3475.jpg',
+    latitude: 48.1351253,
+    longitude: 11.5819805,
+    description: '...',
+  },
+  // Add more store entries as needed
 ];
